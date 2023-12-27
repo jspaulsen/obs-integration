@@ -1,4 +1,4 @@
-import { SpotifyApi, AccessToken } from '@spotify/web-api-ts-sdk';
+import { SpotifyApi, AccessToken, Track as SpotifyTrack } from '@spotify/web-api-ts-sdk';
 
 
 interface Track {
@@ -58,14 +58,21 @@ class SpotifyClient {
         return queue.queue.length > 0 ? queue.queue[0].name : null;
     }
 
-    public async getCurrentSong(): Promise<string | null> {
+    public async getCurrentSong(): Promise<Track | null> {
         const playbackState = await this.api.player.getCurrentlyPlayingTrack();
 
         if (!playbackState || playbackState.currently_playing_type !== 'track' || !playbackState.item || !playbackState.is_playing) {
             return null;
         }
 
-        return playbackState.item.name;
+        const track: SpotifyTrack = playbackState.item as SpotifyTrack;
+        
+        return {
+            name: track.name,
+            album: track.album.name,
+            artists: track.artists.map((artist) => artist.name),
+            uri: track.uri,
+        };
     }
 
     public async skipSong(): Promise<void> {

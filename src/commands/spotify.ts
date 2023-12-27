@@ -13,6 +13,27 @@ interface RewardMap {
     [key: string]: RewardHandler;
 }
 
+
+function animatedDiv(text: string) {
+    const div = document.createElement('div');
+
+    div.id = 'playing';
+    div.style.backgroundColor  = 'white';
+    div.style.color = 'black';
+    div.style.fontSize = '24px';
+    div.style.padding = '10px';
+    div.style.borderRadius = '10px';
+    div.style.zIndex = '1000';
+
+    // reset opacity to 1
+    div.style.opacity = '1';
+    div.style.bottom = '0';
+    div.style.right = '0';
+    div.textContent = text;
+
+    return div;
+}
+
 class SpotifyCommands {
     private spotifyClient: SpotifyClient;
     private commands: CommandMap = {
@@ -56,7 +77,7 @@ class SpotifyCommands {
         return handler(user, message, flags, extra);
     }
 
-    public onSpotfiyReward(user: string, rewardId: string, message: string, extra: any) {
+    public onSpotifyReward(user: string, rewardId: string, message: string, extra: any) {
         const handler = this.rewards[rewardId];
 
         if (!handler) {
@@ -116,9 +137,27 @@ class SpotifyCommands {
             }
         }
 
+        const songString = `${song.name} by ${song.artists.join(', ')}`;
+
+        // get a div with an id "playing"; if it doesn't exist, add it.
+        // this div should be at the bottom righthand corner of the screen
+        // and should contain text that says "Now Playing: <song name>"
+        let playingDiv = document.getElementById('playing');
+
+        // if it doesn't exist in the dom, create it
+        if (!playingDiv) {
+            const div = animatedDiv(`Now Playing: ${songString}`);
+
+            document.body.appendChild(div);
+            div.addEventListener('animationend', () => {
+                console.log('animation ended');
+                div.remove(); // remove the div from the DOM
+            });
+        }
+
         return {
             type: ResponseType.Say,
-            message: `Current playing: ${song}`,
+            message: `Now playing: ${songString}`,
         }
     }
 

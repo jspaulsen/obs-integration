@@ -3,6 +3,7 @@ import { TTSHandler } from "./tts";
 import { Configuration } from "./config";
 import SpotifyClient from "./spotify";
 import SpotifyCommands from "./commands/spotify";
+import "./styles.css";
 
 
 interface MainOpts {
@@ -82,7 +83,7 @@ async function main(opts: MainOpts) {
 
     // register the spotify command handler
     eventHandler.registerCommandsHandler(SpotifyCommandHandler.getSpotifyCommands(), SpotifyCommandHandler.onSpotifyCommand.bind(SpotifyCommandHandler));
-    eventHandler.registerRewardsHandler(SpotifyCommandHandler.getSpotifyRewards(), SpotifyCommandHandler.onSpotfiyReward.bind(SpotifyCommandHandler));
+    eventHandler.registerRewardsHandler(SpotifyCommandHandler.getSpotifyRewards(), SpotifyCommandHandler.onSpotifyReward.bind(SpotifyCommandHandler));
 }
 
 

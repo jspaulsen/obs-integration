@@ -1,0 +1,55 @@
+*{font-family: 'Fira Sans', sans-serif;}
+
+.bold{font-weight:bold;}
+.italic{font-style: italic;}
+.oblique{font-style: oblique;}
+
+
+/* div {
+    width: 100px;
+    height: 100px;
+    background: red;
+    opacity: 0;
+
+    animation: fadeIn 3s;
+    animation-delay: 5s;
+    animation-fill-mode: forwards;
+}
+*/
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+
+    /* 0% {
+        transform: translateY(-100%);
+    }
+    50% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(-100%);
+    } */
+
+    /* it should bounce up and down, y not below 10 or something */
+    0% {
+        transform: translateY(0%);
+    }
+
+    50% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+#playing {
+    opacity: 0;
+    position: absolute;
+
+    animation: fadeOut 3s ease;
+    animation-delay: 0s;
+    animation-fill-mode: forwards;
+}
