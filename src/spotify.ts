@@ -1,4 +1,5 @@
 import { SpotifyApi, AccessToken, Track as SpotifyTrack } from '@spotify/web-api-ts-sdk';
+import { onError } from '.';
 
 
 interface Track {
@@ -26,6 +27,10 @@ class SpotifyClient {
 
         const accessToken = await this.refreshAccessToken();
 
+        if (!accessToken.access_token) {
+            return;
+        }
+
         // set the refresh token in local storage
         localStorage.setItem('spotifyRefreshToken', accessToken.refresh_token);
 
@@ -37,6 +42,7 @@ class SpotifyClient {
         // setup an interval to refresh the access token that is 2 minutes shorter than the actual expiration
         // so that we don't have to wait for the refresh to complete before making requests
         this.refreshTokenInterval = setInterval(async () => {
+            console.log('Refreshing access token')
             const accessToken = await this.refreshAccessToken();
             this.api = SpotifyApi.withAccessToken(
                 this.clientId,
@@ -66,7 +72,7 @@ class SpotifyClient {
         }
 
         const track: SpotifyTrack = playbackState.item as SpotifyTrack;
-        
+
         return {
             name: track.name,
             album: track.album.name,
@@ -152,7 +158,7 @@ class SpotifyClient {
         // if the response is 400-499, then we need to re-authenticate
         if (response.error) {
             localStorage.removeItem('spotifyRefreshToken');
-            throw new Error(response.error_description);
+            onError(response.error_description);
         }
 
         return response;

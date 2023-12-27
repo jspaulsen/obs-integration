@@ -46,14 +46,14 @@ async function setupMain() {
     let spotifyRefreshToken = urlParams.get('spotifyRefreshToken');
 
     if (!twitchToken) {
-        onError('Missing twitch token!');
+        onError('Missing twitchToken!');
         return;
     }
 
     const storedTwitchToken = localStorage.getItem('spotifyRefreshToken');
 
     if (!storedTwitchToken && !spotifyRefreshToken) {
-        onError('Missing spotify token! This needs to be provided in the URL once');
+        onError('Missing spotifyRefreshToken! This needs to be provided in the URL once');
         return;
     }
 
@@ -95,5 +95,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // catch unhandled errors
 window.addEventListener('error', (error: ErrorEvent) => {
+    console.log(error)
     onError(error.error);
 });
+
+export {
+    onError,
+}

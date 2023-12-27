@@ -17,6 +17,8 @@ interface RewardMap {
 function animatedDiv(text: string) {
     const div = document.createElement('div');
 
+    // right coordinate depends on length of text
+
     div.id = 'playing';
     div.style.backgroundColor  = 'white';
     div.style.color = 'black';
@@ -28,7 +30,7 @@ function animatedDiv(text: string) {
     // reset opacity to 1
     div.style.opacity = '1';
     div.style.bottom = '0';
-    div.style.right = '0';
+    div.style.right = (text.length / 2) + 'px';
     div.textContent = text;
 
     return div;
@@ -50,9 +52,6 @@ class SpotifyCommands {
         'b8981d1c-65db-466d-b335-34855badf054': this.onPauseSongReward.bind(this),
         '919846e7-2442-4f07-b8ae-fd4644e137dc': this.onResumeSongReward.bind(this),
     }
-
-    // public skipSongRewardId = '1e9fe39f-2e7d-4f24-8a76-97e31fd6e065';
-    // public addSongRewardId = '6006568f-5023-47b9-93c7-191596139370';
 
     constructor(spotifyClient: SpotifyClient) {
         this.spotifyClient = spotifyClient;
@@ -205,8 +204,7 @@ class SpotifyCommands {
 
     private async onAddSongReward(user: string, rewardId: string, message: string, extra: any): Promise<CommandResponse> {
         const addedSong = await this.spotifyClient.addToQueue(message);
-
-        console.log(message);
+        const songString = `${addedSong.name} by ${addedSong.artists.join(', ')}`;
 
         if (!addedSong) {
             return {
@@ -217,7 +215,7 @@ class SpotifyCommands {
 
         return {
             type: ResponseType.Say,
-            message: `@${user} Added ${addedSong.name} to the queue.`,
+            message: `@${user} Added ${songString} to the queue.`,
         }
     }
 
