@@ -170,9 +170,11 @@ class SpotifyCommands {
             }
         }
 
+        const songString = `${song.name} by ${song.artists.join(', ')}`;
+
         return {
             type: ResponseType.Say,
-            message: `Playing Next: ${song}`,
+            message: `Playing Next: ${songString}`,
         }
     }
 

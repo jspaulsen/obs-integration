@@ -33,6 +33,7 @@ class SpotifyClient {
 
         // set the refresh token in local storage
         localStorage.setItem('spotifyRefreshToken', accessToken.refresh_token);
+        this.refreshToken = accessToken.refresh_token;
 
         this.api = SpotifyApi.withAccessToken(
             this.clientId,
@@ -42,12 +43,20 @@ class SpotifyClient {
         // setup an interval to refresh the access token that is 2 minutes shorter than the actual expiration
         // so that we don't have to wait for the refresh to complete before making requests
         this.refreshTokenInterval = setInterval(async () => {
-            console.log('Refreshing access token')
             const accessToken = await this.refreshAccessToken();
+
+            if (!accessToken.access_token) {
+                return;
+            }
+
+            localStorage.setItem('spotifyRefreshToken', accessToken.refresh_token);
+            this.refreshToken = accessToken.refresh_token;
+            
             this.api = SpotifyApi.withAccessToken(
                 this.clientId,
                 accessToken
             );
+            
         }, (accessToken.expires_in - 120) * 1000);
     }
 
@@ -57,11 +66,21 @@ class SpotifyClient {
         return queue.queue.map((track) => track.name);
     }
 
-    public async getNextSong(): Promise<string | null> {
+    public async getNextSong(): Promise<Track> {
         const queue = await this.api.player.getUsersQueue();
 
-        console.log(queue)
-        return queue.queue.length > 0 ? queue.queue[0].name : null;
+        if (queue.queue.length === 0) {
+            return null;
+        }
+
+        const track: SpotifyTrack = queue.queue[0] as SpotifyTrack;
+
+        return {
+            name: track.name,
+            album: track.album.name,
+            artists: track.artists.map((artist) => artist.name),
+            uri: track.uri,
+        };
     }
 
     public async getCurrentSong(): Promise<Track | null> {
