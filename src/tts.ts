@@ -58,10 +58,6 @@ class TTSHandler {
     }
     
     this.audio.onended = this.onAudioEnded.bind(this);
-
-    // handler.registerRewardsHandler(speakerIds, this.handleReward.bind(this));
-    // handler.registerRewardHandler(this.skipTTSId, this.handleSkipTTS.bind(this));
-    // handler.registerRewardHandler(this.randomTTSId, this.handleRandomTTS.bind(this));
   }
 
   public getSpeakerIds(): string[] {
@@ -92,7 +88,6 @@ class TTSHandler {
     const ttsUrl = await getTTS(speaker, message);
 
     if (this.currentTTS) {
-      console.log("Queueing TTS");
       this.ttsQueue.push(ttsUrl);
       return;
     }
@@ -100,7 +95,7 @@ class TTSHandler {
     await this.playTTS(ttsUrl);
   }
 
-  public async handleRandomTTS(user: string, message: string, extra: any) {
+  public async handleRandomTTS(user: string, rewardId: string, message: string, extra: any) {
     const speaker = NAMES[Math.floor(Math.random() * NAMES.length)];
     const ttsUrl = await getTTS(speaker, message);
 

@@ -43,7 +43,7 @@ class SpotifyCommands {
         'song': this.getCurrentSong.bind(this),
         'next': this.getNextSong.bind(this),
         'lookup': this.onFindSong.bind(this),
-        'add': this.onAddSong.bind(this),
+        'sr': this.onAddSong.bind(this),
         'songcommands': this.onSongCommands.bind(this),
     };
     private rewards: RewardMap = {

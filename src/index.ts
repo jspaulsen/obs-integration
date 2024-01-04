@@ -50,14 +50,14 @@ async function setupMain() {
         return;
     }
 
-    const storedTwitchToken = localStorage.getItem('spotifyRefreshToken');
+    const storedspotifyRefreshToken = localStorage.getItem('spotifyRefreshToken');
 
-    if (!storedTwitchToken && !spotifyRefreshToken) {
+    if (!storedspotifyRefreshToken && !spotifyRefreshToken) {
         onError('Missing spotifyRefreshToken! This needs to be provided in the URL once');
         return;
     }
 
-    if (!storedTwitchToken && spotifyRefreshToken) {
+    if (!storedspotifyRefreshToken && spotifyRefreshToken) {
         localStorage.setItem('spotifyRefreshToken', spotifyRefreshToken);
     }
 
